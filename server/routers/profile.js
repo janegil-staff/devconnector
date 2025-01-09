@@ -78,7 +78,6 @@ router.delete("/experience/:exp_id", auth, deleteExperienceFromUser);
 // @route    DELETE api/profile/education/:edu_id
 // @desc     Delete education from profile
 // @access   Private
-
 router.delete("/education/:edu_id", auth, deleteEducation);
 
 // @route    GET api/profile/user/:user_id

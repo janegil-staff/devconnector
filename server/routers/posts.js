@@ -8,6 +8,8 @@ import {
   deletePost,
   likePost,
   unLikePost,
+  setCommentToPost,
+  deleteCommentFromPost
 } from "../constollers/posts.js";
 import { check } from "express-validator";
 import checkObjectId from "../middleware/checkObjectId.js";
@@ -42,10 +44,20 @@ router.get("/", auth, getAllPosts);
 // @route    PUT api/posts/unlike/:id
 // @desc     Unlike a post
 // @access   Private
-router.put("/like/:id", auth, checkObjectId('id'), likePost);
+router.put("/like/:id", auth, checkObjectId("id"), likePost);
 
 // @route    PUT api/posts/unlike/:id
 // @desc     Unlike a post
 // @access   Private
-router.put("/unlike/:id", auth, checkObjectId('id'), unLikePost);
+router.put("/unlike/:id", auth, checkObjectId("id"), unLikePost);
+
+// @route    POST api/posts/comment/:id
+// @desc     Comment on a post
+// @access   Private
+router.post("/", auth, checkObjectId("id"), setCommentToPost);
+
+// @route    DELETE api/posts/comment/:id/:comment_id
+// @desc     Delete comment
+// @access   Private
+router.delete("/comment/:id/:comment_id", auth, deleteCommentFromPost);
 export default router;

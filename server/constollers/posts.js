@@ -2,9 +2,6 @@ import User from "../models/User.js";
 import Post from "../models/Post.js";
 import { validationResult } from "express-validator";
 
-// @route       POST api/posts
-// @desc        Create a post
-// @access      Private
 const createPost = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -28,9 +25,6 @@ const createPost = async (req, res) => {
   }
 };
 
-// @route       GET api/posts
-// @desc        GEt all posts
-// @access      Private
 const getAllPosts = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -42,9 +36,6 @@ const getAllPosts = async (req, res) => {
   } catch (err) {}
 };
 
-// @route    GET api/posts/:id
-// @desc     Get post by ID
-// @access   Private
 const getPostById = async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
@@ -61,9 +52,6 @@ const getPostById = async (req, res) => {
   }
 };
 
-// @route    DELETE api/posts/:id
-// @desc     Delete a post
-// @access   Private
 const deletePost = async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
@@ -130,4 +118,65 @@ const unLikePost = async (req, res) => {
   }
 };
 
-export { createPost, getAllPosts, getPostById, deletePost, likePost, unLikePost };
+const setCommentToPost = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+    const post = await Post.findById(req.params.id);
+
+    const newComment = {
+      text: req.body.text,
+      name: user.name,
+      avatar: user.avatar,
+      user: req.user.id,
+    };
+
+    post.comments.unshift(newComment);
+
+    await post.save();
+    res.json(post.comments);
+  } catch (err) {}
+};
+
+const deleteCommentFromPost = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+
+    // Pull out comment
+    const comment = post.comments.find(
+      (comment) => comment.id === req.params.comment_id
+    );
+    // Make sure comment exists
+    if (!comment) {
+      return res.status(404).json({ msg: "Comment does not exist" });
+    }
+    // Check user
+    if (comment.user.toString() !== req.user.id) {
+      return res.status(401).json({ msg: "User not authorized" });
+    }
+
+    post.comments = post.comments.filter(
+      ({ id }) => id !== req.params.comment_id
+    );
+
+    await post.save();
+
+    return res.json(post.comments);
+  } catch (err) {
+    console.error(err.message);
+    return res.status(500).send("Server Error");
+  }
+};
+export {
+  createPost,
+  getAllPosts,
+  getPostById,
+  deletePost,
+  likePost,
+  unLikePost,
+  setCommentToPost,
+  deleteCommentFromPost
+};
