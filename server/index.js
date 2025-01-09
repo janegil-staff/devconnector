@@ -4,6 +4,7 @@ dotenv.config();
 import cors from "cors";
 import connectDB from "./config/db.js";
 import authRoutes from "./routers/auth.js";
+import profileRoutes from "./routers/profile.js";
 
 
 const app = express();
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use(cors());
 // Define Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/profile", profileRoutes);
 
 // Serve static assets in production
 if (process.env.NODE_ENV === "production") {

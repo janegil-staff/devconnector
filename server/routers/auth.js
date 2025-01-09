@@ -4,7 +4,7 @@ const router = express.Router();
 
 import { auth } from "../middleware/auth.js";
 
-import { getUser, createUser, loginUser } from "../constollers/auth.js";
+import { getUser, createUser, loginUser } from "../controllers/auth.js";
 
 router
   .route("/")
