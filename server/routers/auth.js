@@ -3,12 +3,12 @@ import express from "express";
 const router = express.Router();
 
 import { auth } from "../middleware/auth.js";
+import { createUser, getUser, loginUser } from "../constollers/auth.js";
 
-import { getUser, createUser, loginUser } from "../controllers/auth.js";
 
 router
   .route("/")
-  .get(auth, auth, getUser)
+  .get(auth, getUser)
   .post(
     [
       check("name", "Name is required").not().isEmpty(),
