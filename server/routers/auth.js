@@ -3,32 +3,25 @@ import express from "express";
 const router = express.Router();
 
 import { auth } from "../middleware/auth.js";
-import { createUser, getUser, loginUser } from "../constollers/auth.js";
+import {getUser, loginUser } from "../constollers/auth.js";
+
+// @route    GET api/auth
+// @desc     Get user by token
+// @access   Privat
+router.get("/", auth, getUser);
+
+// @route    POST api/auth
+// @desc     Authenticate user & get token
+// @access   Public
+router.post(
+  "/",
+  [
+    check("email", "Please include a valid email").isEmail(),
+    check("password", "Password is required").exists(),
+  ],
+  loginUser
+);
 
 
-router
-  .route("/")
-  .get(auth, getUser)
-  .post(
-    [
-      check("name", "Name is required").not().isEmpty(),
-      check("email", "Please include a valid email").isEmail(),
-      check(
-        "password",
-        "Please enter a password with 6 or more characters"
-      ).isLength({ min: 6 }),
-    ],
-    createUser
-  );
-
-router
-  .route("/login")
-  .post(
-    [
-      check("email", "Please include a valid email").isEmail(),
-      check("password", "Password is required").exists(),
-    ],
-    loginUser
-  );
 
 export default router;

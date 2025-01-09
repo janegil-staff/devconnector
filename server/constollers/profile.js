@@ -1,8 +1,8 @@
 import request from "request";
 import Profile from "../models/Profile.js";
 import User from "../models/User.js";
-import { Result, validationResult } from "express-validator";
-import axios from "axios";
+import { validationResult } from "express-validator";
+
 const getProfile = async (req, res) => {
   try {
     const profile = await Profile.findById(req.user.id).populate("User", [

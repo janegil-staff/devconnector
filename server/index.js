@@ -5,7 +5,8 @@ import cors from "cors";
 import connectDB from "./config/db.js";
 import authRoutes from "./routers/auth.js";
 import profileRoutes from "./routers/profile.js";
-
+import postRoutes from "./routers/posts.js";
+import userRoutes from "./routers/users.js";
 
 const app = express();
 
@@ -18,6 +19,8 @@ app.use(cors());
 // Define Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/profile", profileRoutes);
+app.use("/api/posts", postRoutes);
+app.use("/api/users", userRoutes);
 
 // Serve static assets in production
 if (process.env.NODE_ENV === "production") {
