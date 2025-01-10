@@ -148,7 +148,11 @@ img {
   color: #333;
 }
 
+.alert-wrapper {
+  margin-top: 4.5rem;
+}
 .alert {
+
   padding: 0.8rem;
   margin: 1rem 0;
   opacity: 0.9;
